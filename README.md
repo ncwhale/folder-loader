@@ -53,9 +53,13 @@ module.exports = db;
 `loader(dirname, filename, options)`
 
 Param | Type | Description
------ | ---- | ----
+----- | ---- |:----
 dirname | String | folder to load.
 filename | String | file call this function.(to avoid stack overflow call loop).
 options.filter_regexp | Regexp | test if need to load this module file.( Default: `/^[^\.\-_#~]/i` to avoid EMACS temp file. )
 options.ext_regexp | Regexp | test the file ext. Default: `/\.js$/i`
 options.loader | function | function used to load modules. sign as (file => {})
+
+# Tips
+
+All the regexp will only use `.test` function, so you can create an object with test function to acts as regexp.
