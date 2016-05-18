@@ -1,6 +1,6 @@
 {
   "name": "folder-loader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Load modules from folder as one module.",
   "main": "index.js",
   "dependencies": {},
