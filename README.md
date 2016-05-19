@@ -13,7 +13,7 @@ module.exports = loader(__dirname, __filename);
 
 the code above will exports every file/folder in this dir as an object with filename as key.
 
-if you are exports sequelize module:
+if you are exports sequelize module user iterator:
 
 ```Javascript
 const loader = require('folder-loader'),
@@ -24,18 +24,16 @@ const loader = require('folder-loader'),
 let sequelize = Sequelize(config),
     db = {};
 
-loader(__dirname, __filename, {
-    loader: ( file => {
-        try {
-            let model = sequelize['import'](path.join(__dirname, file));
-            db[model.name] = model;
-            debug("Import model " + model.name + " success.");
-        }
-        catch (error) {
-            debug("Import model file: " + file + " error: " + error);
-        }
-    })
-});
+for (let model_func of loader.iterator(__dirname, __filename)) {
+  try {
+    let model = model_func(sequelize, Sequelize);
+    db[model.name] = model;
+    debug("Import model " + model.name + " success.");
+  }
+  catch (error) {
+    debug("Import model error: " + error);
+  }
+}
 
 for (let modelName in db) {
   if (db[modelName].associate) {
@@ -59,6 +57,10 @@ filename | String | file call this function.(to avoid stack overflow call loop).
 options.filter_regexp | Regexp | test if need to load this module file.( Default: `/^[^\.\-_#~]/i` to avoid EMACS temp file. )
 options.ext_regexp | Regexp | test the file ext. Default: `/\.js$/i`
 options.loader | function | function used to load modules. sign as (file => {})
+
+`loader.iterator(dirname, filename, options)`
+
+> It's a generator alias of loader.
 
 # Tips
 
