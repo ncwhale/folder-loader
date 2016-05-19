@@ -13,7 +13,7 @@ module.exports = loader(__dirname, __filename);
 
 the code above will exports every file/folder in this dir as an object with filename as key.
 
-if you are exports sequelize module user iterator:
+if you are exports sequelize module use iterator:
 
 ```Javascript
 const loader = require('folder-loader'),
