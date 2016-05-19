@@ -55,13 +55,10 @@ Param | Type | Description
 dirname | String | folder to load.
 filename | String | file call this function.(to avoid stack overflow call loop).
 options.filter_regexp | Regexp | test if need to load this module file.( Default: `/^[^\.\-_#~]/i` to avoid EMACS temp file. )
-options.ext_regexp | Regexp | test the file ext. Default: `/\.js$/i`
-options.loader | function | function used to load modules. sign as (file => {})
+options.ext_regexp | Regexp | test the file ext. ( Default: `/\.js$/i` )
+options.subfolder | boolean | export subfolders as module, Default: true
+options.loader | function | function used to load modules. sign as `(file => { return module; })`
 
 `loader.iterator(dirname, filename, options)`
 
-> It's a generator alias of loader.
-
-# Tips
-
-All the regexp will only use `.test` function, so you can create an object with test function to acts as regexp.
+> It's a generator alias of loader, have the same options.

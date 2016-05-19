@@ -7,6 +7,7 @@ let folder_loader = function (dirname, filename = 'index.js', options = {}) {
 
     const filter_regexp = options.filter_regexp || /^[^\.\-_#~]/i,
         ext_regexp = options.ext_regexp || /\.js$/i,
+        export_folder = options.hasOwnProperty('subfolder') ? options.subfolder : true,
         selfname = path.basename(filename),
         load_function = options.loader || (file => {
             let this_module = require(path.join(dirname, file));
@@ -21,7 +22,17 @@ let folder_loader = function (dirname, filename = 'index.js', options = {}) {
     fs
         .readdirSync(dirname)
         .filter((file) => {
-            return (filter_regexp.test(file)) && (file !== selfname) && (ext_regexp.test(file));
+            if ((filter_regexp.test(file)) && (file !== selfname)) {
+                let file_stat = fs.statSync(path.join(dirname, file));
+
+                if (file_stat.isDirectory()) {
+                    return export_folder;
+                } else if (file_stat.isFile()) {
+                    return ext_regexp.test(file);
+                }
+            }
+
+            return false;
         })
         .sort()
         .forEach(load_function);
@@ -32,14 +43,25 @@ let folder_loader = function (dirname, filename = 'index.js', options = {}) {
 let folder_loader_iter = function* (dirname, filename = 'index.js', options = {}) {
     const filter_regexp = options.filter_regexp || /^[^\.\-_#~]/i,
         ext_regexp = options.ext_regexp || /\.js$/i,
+        export_folder = options.hasOwnProperty('subfolder') ? options.subfolder : true,
         selfname = path.basename(filename),
         load_function = options.loader || (file => {
-            return require(path.join(dirname, file)); 
+            return require(path.join(dirname, file));
         });
 
     let files = fs.readdirSync(dirname)
         .filter((file) => {
-            return (filter_regexp.test(file)) && (file !== selfname) && (ext_regexp.test(file));
+            if ((filter_regexp.test(file)) && (file !== selfname)) {
+                let file_stat = fs.statSync(path.join(dirname, file));
+
+                if (file_stat.isDirectory()) {
+                    return export_folder;
+                } else if (file_stat.isFile()) {
+                    return ext_regexp.test(file);
+                }
+            }
+
+            return false;
         })
         .sort();
 
